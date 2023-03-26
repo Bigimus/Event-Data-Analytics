@@ -1,0 +1,81 @@
+#:kivy 2.1.0
+#:import Factory kivy.factory.Factory
+
+WindowManager:
+    LoginWindow:
+    HomeWindow: 
+
+<CustomTextField@MDTextField>:
+    hint_font_size: dp(30)
+    font_size: dp(20) 
+    pos_hint: {"center_x": 0.5, "center_y": 0.5}
+    multiline: False
+    mode: "rectangle"
+
+    #Normal
+    line_color_normal: 1, 1, 1, 1
+    hint_text_color_normal: 1, 1, 1, 1
+    text_color_normal: 1, 1, 1, 1
+
+    #Active
+    line_color_focus: 1, 1, 1, 1
+    hint_text_color_focus: 1, 1, 1, 1
+    text_color_focus: 1, 1, 1, 1
+
+<BackgroundImage@Image>:
+    source: "Images/Background.jpg"
+    allow_stretch: True
+    keep_ratio: False
+
+<LoginWindow>:
+    name: "login"
+
+    BackgroundImage:
+
+    MDAnchorLayout:
+        anchor_x: "center"
+        anchor_y: "center"
+
+        MDCard:
+            size_hint: 0.3, 0.3
+            orientation: 'vertical'
+            padding: dp(10)
+            spacing: dp(25)
+            background: "Images/Card_Background.png"
+
+            CustomTextField:
+                id: root_username
+                hint_text: "Username"
+
+            RelativeLayout:
+                CustomTextField:
+                    id: root_password
+                    hint_text: "Password"
+                    password: True
+
+                MDIconButton:
+                    icon: "eye-off"
+                    pos_hint: {"center_x": 0.95, "center_y": 0.45}
+                    text_color: 1, 1, 1, 1
+                    theme_text_color: "Custom"
+                    on_release:
+                        self.icon = "eye" if self.icon == "eye-off" else "eye-off"
+                        root_password.password = False if root_password.password is True else True
+
+            AnchorLayout:
+                anchor_x: "center"
+                anchor_y: "bottom"
+
+                MDRaisedButton:
+                    text: "Login"
+                    md_bg_color: "#186cf0"
+                    font_size: dp(24)
+                    on_release: 
+                        if root.validateLogin(root_username.text, root_password.text) == "True": \
+                        root.manager.current = "home" 
+                        root.manager.transition.direction = "left"
+
+<HomeWindow>:
+    name: "home"
+
+    BackgroundImage:
