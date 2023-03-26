@@ -26,6 +26,9 @@ class LoginWindow(MDScreen):
 class HomeWindow(MDScreen):
     pass
 
+class CreateWindow(MDScreen):
+    pass
+
 class WindowManager(MDScreenManager):
     pass
 

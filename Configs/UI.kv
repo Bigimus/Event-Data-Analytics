@@ -2,8 +2,14 @@
 #:import Factory kivy.factory.Factory
 
 WindowManager:
-    LoginWindow:
+    #LoginWindow:
     HomeWindow: 
+    CreateWindow:
+<CustomMDCard@MDCard>:
+    orientation: 'vertical'
+    padding: dp(10)
+    spacing: dp(25)
+    background: "Images/Card_Background.png"
 
 <CustomTextField@MDTextField>:
     hint_font_size: dp(30)
@@ -79,3 +85,133 @@ WindowManager:
     name: "home"
 
     BackgroundImage:
+    MDAnchorLayout:
+        anchor_x: "center"
+        anchor_y: "center"
+
+        MDBoxLayout:
+            orientation: "vertical"
+            padding: dp(20)
+            spacing: dp(20)
+
+            MDBoxLayout:
+                orientation: "horizontal"
+                padding_x: dp(20)
+                spacing: dp(20)
+            
+                CustomMDCard:
+                    id: create
+                    spacing: dp(20)
+                    valign: "center"
+                    on_release: root.manager.current = "create"
+                    AnchorLayout:
+                        anchor_x: "left"
+                        anchor_y: "top"
+                        size_hint: 0.1, 0.1
+
+                        MDIconButton:
+                            icon: "cog"
+                            on_release: print("Settings")
+
+                    MDBoxLayout:
+                        orientation: "vertical"
+                        padding: dp(125)
+                        spacing: dp(40)
+                        valign: "center"
+                        MDIcon:
+                            icon: "account-arrow-up"
+                            font_size: dp(65)
+                            pos_hint: {"center_x": 0.5}
+                            halign: "center"
+
+                        MDLabel:
+                            text: "Create"
+                            font_size: dp(30)
+                            bold: True
+                            halign: "center"
+
+                CustomMDCard:
+                    id: account_search
+                    padding: dp(100)
+                    background: "Images/Card_Background.png"
+                    on_release: print("Search")
+                    MDIcon:
+                        icon: "magnify"
+                        font_size: dp(65)
+                        pos_hint: {"center_x": 0.5}
+                        halign: "center"
+
+                    MDLabel:
+                        text: "Search"
+                        font_size: dp(30)
+                        bold: True
+                        halign: "center"
+
+            MDBoxLayout:
+                orientation: "horizontal"
+                padding_x: dp(20)
+                spacing: dp(20)
+                CustomMDCard:
+                    
+                CustomMDCard:
+
+<CreateWindow>:
+    name: "create"
+
+    BackgroundImage:
+    MDAnchorLayout:
+        anchor_x: "center"
+        anchor_y: "center"
+
+        MDCard:
+            orientation: "vertical"
+            padding: dp(30), dp(30)
+            spacing: dp(30)
+            size_hint: 0.5, 0.7
+
+            CustomTextField:
+                id: search_app
+                hint_text: "Select Company ID"
+                size_hint: 1, 1
+                readonly: True
+                on_focus: 
+                    if self.focus: \
+                    print("company ID")
+                    
+            CustomTextField:
+                id: event_name
+                hint_text: "Event Name"
+                size_hint: 1, 1,
+                readonly: True
+                on_focus:
+                    print("event name")
+                    #root.openEmailMenu(search_app.text) if search_app.text != "" else False if self.focus else False
+
+            CustomTextField:
+                id: event_data:
+                hint_text: "Username"
+                readonly: True
+
+            RelativeLayout:
+                CustomTextField:
+                    id: account_password
+                    hint_text: "Password"
+                    password: True
+                    readonly: True
+
+                MDIconButton:
+                    icon: "eye-off"
+                    pos_hint: {"center_x": 0.95, "center_y": 0.45}
+                    text_color: 1, 1, 1, 1
+                    theme_text_color: "Custom"
+                    on_release:
+                        self.icon = "eye" if self.icon == "eye-off" else "eye-off"
+                        account_password.password = False if account_password.password is True else True
+            AnchorLayout:
+                anchor_x: "right"
+
+                MDRaisedButton:
+                    text: "Home"
+                    font_size: dp(20)
+                    color: "red"
+                    on_release: root.manager.current = "home"
