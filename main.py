@@ -7,21 +7,19 @@ from kivymd.uix.screenmanager import MDScreenManager
 from kivymd.uix.screen import MDScreen 
 from kivymd.uix.menu import MDDropdownMenu
 
-from ObjectHandler import Configurations as Config
-from ObjectHandler import Settings
-from ObjectHandler import Event
-from DatabaseHandler import Database
+from SettingsHandler import Settings
+from EventHandler import Event
 
 import StorageHandler as SH
 
-UI = Config.UI
-SETTINGS = Config.SETTINGS
+UI = Settings.UI
+SETTINGS = Settings.SETTINGS
 
 Window.size = 1280, 720
 
 class LoginWindow(MDScreen):
     def validateLogin(self, username, password):
-        if username == Settings().root_username and password == Settings().root_password:   # noqa: E501
+        if username == Settings().root_user and password == Settings().root_pass:   # noqa: E501
             return "True"
         else: 
             return "False"
@@ -30,19 +28,15 @@ class HomeWindow(MDScreen):
     pass
 
 class SettingsWindow(MDScreen):
-    def saveRoot(self, username, password):
-        self.settings = Settings(
-            username, 
-            password
-        ).saveSettings()
-
-    def saveDatabase(self, host, username, password, database):
-        self.database = Database(
-            host,
-            username,
-            password,
-            database
-        ).saveSettings()
+    def saveSettings(self, root_user, root_pass, host, db_user, db_pass, database):
+        Settings(
+            root_user = root_user, 
+            root_pass = root_pass,
+            host = host,
+            db_user = db_user,
+            db_pass = db_pass,
+            database = database
+        ).save()
 
     ## CLIENTS ##
 
@@ -146,6 +140,7 @@ class MainApp(MDApp):
         return self.kv
     
     def validateData(*args):
+        print("validateData")
         for arg in args:
             if arg == "" and args.index(arg) != 0:
                 return False

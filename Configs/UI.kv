@@ -8,9 +8,6 @@ WindowManager:
     SettingsWindow:
 
 <CustomMDCard@MDCard>:
-    orientation: "vertical"
-    padding: dp(10)
-    spacing: dp(25)
     background: "Images/Card_Background.png"
 
 <CustomTextField@MDTextField>:
@@ -224,155 +221,204 @@ WindowManager:
 
     BackgroundImage:
 
-    MDBoxLayout:
-        orientation: "horizontal"
-        spacing: dp(20)
-        padding: dp(20)
-        MDBoxLayout:
-            orientation: "vertical"
-            spacing: dp(20)
-            
-            CustomMDCard:
-                padding: dp(30)
-                spacing: dp(30)
-                orientation: "vertical"
-
-                CustomTextField:
-                    id: client_id
-                    hint_text: "Client IDs"
-                    on_focus:
-                        if self.focus: \
-                        root.openClientMenu()
-
-                MDBoxLayout:
-                    orientation: "horizontal"
-                    spacing: dp(25)
-
-                    MDRaisedButton:
-                        id: client_id_create
-                        text: "Create"
-                        on_release:
-                            root.createClientID(client_id.text)
-                        
-                    MDRaisedButton:
-                        id: client_id_delete
-                        text: "Delete"
-                        on_release:
-                            root.deleteClientID(client_id.text)
-
-                    MDRaisedButton:
-                        id: home
-                        text: "Home"
-                        on_release:
-                            root.manager.current = "home"
-
-            MDCard:
+    MDCard:
+        size_hint: 0.95, 0.95
+        pos_hint: {"center_x": 0.5, "center_y": 0.5}
 
         MDBoxLayout:
             orientation: "horizontal"
-            MDBoxLayout: 
+            spacing: dp(20)
+            padding: dp(20)
+
+            MDBoxLayout:
                 orientation: "vertical"
                 spacing: dp(20)
-                MDCard:
-                    orientation: "vertical"
-                    padding: dp(30)
-                    spacing: dp(20)
-                    size_hint: 1, 0.65
-                    background: "Images/Card_Background.png"
+                size_hint: 0.1, 1
 
+                MDIconButton:
+                    icon: "home"
+                    on_release: 
+                        root.manager.current = "home"
+                
+                MDIconButton:
+                    icon: "content-save-cog"
+                    on_release: 
+                        if app.validateData(root_username.text, root_password.text, host.text, database_username.text, database_password.text, database.text) == True: \
+                        root.saveSettings(root_username.text, root_password.text, host.text, database_username.text, database_password.text, database.text)
+
+                
+                Widget:
+
+            MDBoxLayout:
+                orientation: "vertical"
+                spacing: dp(20)
+
+                MDLabel:
+                    text: "DATABASE"
+                    font_size: dp(32)
+                    halign: "center"
+
+                CustomTextField:
+                    id: host
+                    text: app.host
+                    hint_text: "Host"
+
+                CustomTextField:
+                    id: database_username
+                    text: app.database_username
+                    hint_text: "Database Username"
+
+                RelativeLayout:
                     CustomTextField:
-                        id: host
-                        text: app.host
-                        hint_text: "Host"
+                        id: database_password
+                        text: app.database_password
+                        hint_text: "Database Password"
+                        password: True
 
+                    MDIconButton:
+                        icon: "eye-off"
+                        pos_hint: {"center_x": 0.95, "center_y": 0.45}
+                        text_color: 1, 1, 1, 1
+                        theme_text_color: "Custom"
+                        on_release:
+                            self.icon = "eye" if self.icon == "eye-off" else "eye-off"
+                            database_password.password = False if database_password.password is True else True
+
+                CustomTextField:
+                    id: database
+                    text: app.database
+                    hint_text: "Database"
+                
+                MDLabel:
+                    text: "ROOT"
+                    font_size: dp(32)
+                    halign: "center"
+
+                CustomTextField:
+                    id: root_username
+                    text: app.root_username
+                    hint_text: "Root Username"
+
+                RelativeLayout:
                     CustomTextField:
-                        id: database_username
-                        text: app.database_username
-                        hint_text: "Database Username"
+                        id: root_password
+                        text: app.root_password
+                        hint_text: "Root Password"
+                        password: True
 
-                    RelativeLayout:
-                        CustomTextField:
-                            id: database_password
-                            text: app.database_password
-                            hint_text: "Database Password"
-                            password: True
+                    MDIconButton:
+                        icon: "eye-off"
+                        pos_hint: {"center_x": 0.95, "center_y": 0.45}
+                        text_color: 1, 1, 1, 1
+                        theme_text_color: "Custom"
+                        on_release:
+                            self.icon = "eye" if self.icon == "eye-off" else "eye-off"
+                            root_password.password = False if root_password.password is True else True
 
-                        MDIconButton:
-                            icon: "eye-off"
-                            pos_hint: {"center_x": 0.95, "center_y": 0.45}
-                            text_color: 1, 1, 1, 1
-                            theme_text_color: "Custom"
-                            on_release:
-                                self.icon = "eye" if self.icon == "eye-off" else "eye-off"
-                                database_password.password = False if database_password.password is True else True
+            MDBoxLayout:
+                orientation: "vertical"
+                spacing: dp(20)
 
-                    CustomTextField:
-                        id: database
-                        text: app.database
-                        hint_text: "Database"
+                Widget:
+
+
                     
-                    MDBoxLayout:
-                        MDRaisedButton:
-                            id: submit
-                            text: "Submit"
-                            font_size: dp(20)
-                            pos_hint: {"center_y": 0.5}
-                            on_release:
-                                if app.validateData(host.text, database_username.text, database_password.text, database.text) == True: \
-                                root.saveDatabase(host.text, database_username.text, database_password.text, database.text)
+
+    # MDBoxLayout:
+    #     orientation: "horizontal"
+    #     spacing: dp(20)
+    #     padding: dp(20)
+    #     MDBoxLayout:
+    #         orientation: "vertical"
+    #         spacing: dp(20)
+            
+    #         CustomMDCard:
+    #             padding: dp(30)
+    #             spacing: dp(30)
+    #             orientation: "vertical"
+
+    #             CustomTextField:
+    #                 id: client_id
+    #                 hint_text: "Client IDs"
+    #                 on_focus:
+    #                     if self.focus: \
+    #                     root.openClientMenu()
+
+    #             MDBoxLayout:
+    #                 orientation: "horizontal"
+    #                 spacing: dp(25)
+
+    #                 MDRaisedButton:
+    #                     id: client_id_create
+    #                     text: "Create"
+    #                     on_release:
+    #                         root.createClientID(client_id.text)
+                        
+    #                 MDRaisedButton:
+    #                     id: client_id_delete
+    #                     text: "Delete"
+    #                     on_release:
+    #                         root.deleteClientID(client_id.text)
+
+    #                 MDRaisedButton:
+    #                     id: home
+    #                     text: "Home"
+    #                     on_release:
+    #                         root.manager.current = "home"
+
+    #         MDCard:
+
+    #     MDBoxLayout:
+    #         orientation: "horizontal"
+    #         MDBoxLayout: 
+    #             orientation: "vertical"
+    #             spacing: dp(20)
+    #             MDCard:
+    #                 orientation: "vertical"
+    #                 padding: dp(30)
+    #                 spacing: dp(20)
+    #                 size_hint: 1, 0.65
+    #                 background: "Images/Card_Background.png"
+    #                 MDBoxLayout:
+    #                     MDRaisedButton:
+    #                         id: submit
+    #                         text: "Submit"
+    #                         font_size: dp(20)
+    #                         pos_hint: {"center_y": 0.5}
+    #                         on_release:
+    #                             if app.validateData(host.text, database_username.text, database_password.text, database.text) == True: \
+    #                             root.saveDatabase(host.text, database_username.text, database_password.text, database.text)
                                 
-                        AnchorLayout:
-                            anchor_x: "right"
+    #                     AnchorLayout:
+    #                         anchor_x: "right"
 
-                            MDRaisedButton:
-                                text: "Home"
-                                font_size: dp(20)
-                                color: "red"
-                                on_release: 
-                                    root.manager.current = "home"
-                MDCard:
-                    orientation: "vertical"
-                    padding: dp(20)
-                    spacing: dp(20)
-                    size_hint: 1, 0.35
-                    background: "Images/Card_Background.png"
-
-                    CustomTextField:
-                        id: root_username
-                        text: app.root_username
-                        hint_text: "Root Username"
-
-                    RelativeLayout:
-                        CustomTextField:
-                            id: root_password
-                            text: app.root_password
-                            hint_text: "Root Password"
-                            password: True
-
-                        MDIconButton:
-                            icon: "eye-off"
-                            pos_hint: {"center_x": 0.95, "center_y": 0.45}
-                            text_color: 1, 1, 1, 1
-                            theme_text_color: "Custom"
-                            on_release:
-                                self.icon = "eye" if self.icon == "eye-off" else "eye-off"
-                                root_password.password = False if root_password.password is True else True
-
-                    MDBoxLayout:
-                        MDRaisedButton:
-                            id: account_submit
-                            text: "Save"
-                            font_size: dp(20)
-                            pos_hint: {"center_y": 0.5}
-                            on_release:
-                                if app.validateData(root_username.text, root_password.text) == True: \
-                                root.saveSettings(root_username.text, root_password.text)
+    #                         MDRaisedButton:
+    #                             text: "Home"
+    #                             font_size: dp(20)
+    #                             color: "red"
+    #                             on_release: 
+    #                                 root.manager.current = "home"
+    #             MDCard:
+    #                 orientation: "vertical"
+    #                 padding: dp(20)
+    #                 spacing: dp(20)
+    #                 size_hint: 1, 0.35
+    #                 background: "Images/Card_Background.png"
+    #                 MDBoxLayout:
+    #                     MDRaisedButton:
+    #                         id: account_submit
+    #                         text: "Save"
+    #                         font_size: dp(20)
+    #                         pos_hint: {"center_y": 0.5}
+    #                         on_release:
+    #                             if app.validateData(root_username.text, root_password.text) == True: \
+    #                             root.saveSettings(root_username.text, root_password.text)
                                 
-                        AnchorLayout:
-                            anchor_x: "right"
+    #                     AnchorLayout:
+    #                         anchor_x: "right"
 
-                            MDRaisedButton:
-                                text: "Home"
-                                font_size: dp(20)
-                                color: "red"
-                                on_release: root.manager.current = "home"
+    #                         MDRaisedButton:
+    #                             text: "Home"
+    #                             font_size: dp(20)
+    #                             color: "red"
+    #                             on_release: root.manager.current = "home"
