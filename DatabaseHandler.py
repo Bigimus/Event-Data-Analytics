@@ -29,3 +29,5 @@ class Database:
 
     def sendCommand(self, command, values):
         self.cursor.executemany(command, (values, ))
+        return self.cursor.fetchall()
+    

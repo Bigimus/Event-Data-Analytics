@@ -3,11 +3,17 @@
 
 WindowManager:
     #LoginWindow:
-    #HomeWindow: 
-    #CreateWindow:
+    HomeWindow: 
+    CreateWindow:
     SettingsWindow:
+    EventWindow:
+
+<EventMDButton@MDRaisedButton>:
+    font_size: dp(24)
+    bold: True
 
 <CustomMDCard@MDCard>:
+    orientation: "vertical"
     background: "Images/Card_Background.png"
 
 <CustomTextField@MDTextField>:
@@ -101,6 +107,7 @@ WindowManager:
             
                 CustomMDCard:
                     id: create
+                    orientation: "vertical"
                     spacing: dp(20)
                     valign: "center"
                     on_release: root.manager.current = "create"
@@ -155,8 +162,21 @@ WindowManager:
                 orientation: "horizontal"
                 padding_x: dp(20)
                 spacing: dp(20)
+
                 CustomMDCard:
-                    
+                    on_release: root.manager.current = "event"
+                    padding: dp(100)
+                    MDIcon:
+                        icon: "seat"
+                        font_size: dp(65)
+                        pos_hint: {"center_x": 0.5}
+
+                    MDLabel:
+                        text: "Events"
+                        font_size: dp(30)
+                        bold: True
+                        halign: "center"
+
                 CustomMDCard:
 
 <CreateWindow>:
@@ -168,8 +188,8 @@ WindowManager:
         anchor_x: "center"
         anchor_y: "center"
 
-        MDCard:
-            orientation: "vertical"
+        CustomMDCard:
+            id: create_event
             padding: dp(30), dp(30)
             spacing: dp(30)
             size_hint: 0.5, 0.7
@@ -221,7 +241,7 @@ WindowManager:
 
     BackgroundImage:
 
-    MDCard:
+    CustomMDCard:
         size_hint: 0.95, 0.95
         pos_hint: {"center_x": 0.5, "center_y": 0.5}
 
@@ -321,104 +341,94 @@ WindowManager:
 
                 Widget:
 
+<EventWindow>:
+    name: "event"
 
-                    
+    BackgroundImage:
 
-    # MDBoxLayout:
-    #     orientation: "horizontal"
-    #     spacing: dp(20)
-    #     padding: dp(20)
-    #     MDBoxLayout:
-    #         orientation: "vertical"
-    #         spacing: dp(20)
+    AnchorLayout:
+        anchor_x: "left"
+        anchor_y: "top"
+        padding: dp(20)
+
+        MDIconButton:
+            icon: "home"
+            font_size: dp(32)
+            on_release:
+                root.manager.current = "home"
+
+    CustomMDCard:
+        pos_hint: {"center_x": 0.5, "center_y": 0.5}
+        size_hint: 0.60, 0.5
+        padding: dp(20)
+        spacing: dp(20)
+
+        MDBoxLayout:
+            orientation: "horizontal"
+            spacing: dp(20)
+
+            CustomTextField:
+                id: client_id
+                hint_text: "Client ID"
+                text: "LIGL"
+                size_hint: 0.2, None
+                readonly: True
+                on_focus: 
+                    if self.focus: \
+                    root.openClientMenu()
+
+            CustomTextField:
+                id: event_num
+                size_hint: 0.3, None
+                hint_text: "Event Number"
+                
+            CustomTextField:
+                id: name
+                hint_text: "Event Name"
+        
+        CustomTextField:
+            id: location
+            hint_text: "Event Location"
+
+        CustomTextField:
+            id: date
+            hint_text: "Event Date"
+
+        MDBoxLayout:
+            halign: "center"
+            padding: dp(100), dp(10)
+
+            EventMDButton:
+                id: create
+                text: "CREATE"
+                on_release:
+                    if app.validateData(name.text, location.text, date.text) == True: \
+                    root.create()
+
+            EventMDButton:
+                id: search
+                text: "SEARCH"
+                on_release:
+                    if root.validateEventNum(event_num.text) == True: \
+                    root.search()
+
+            EventMDButton:
+                id: edit
+                text: "EDIT"
+                disabled: True
+                on_release:
+                    root.edit()
             
-    #         CustomMDCard:
-    #             padding: dp(30)
-    #             spacing: dp(30)
-    #             orientation: "vertical"
+            EventMDButton:
+                id: save
+                text: "SAVE"
+                disabled: True
+                on_release: 
+                    if app.validateData(name.text, location.text, date.text) == True: \
+                    root.save()
+        
+            EventMDButton:
+                id: delete
+                text: "DELETE"
+                disabled: True
 
-    #             CustomTextField:
-    #                 id: client_id
-    #                 hint_text: "Client IDs"
-    #                 on_focus:
-    #                     if self.focus: \
-    #                     root.openClientMenu()
-
-    #             MDBoxLayout:
-    #                 orientation: "horizontal"
-    #                 spacing: dp(25)
-
-    #                 MDRaisedButton:
-    #                     id: client_id_create
-    #                     text: "Create"
-    #                     on_release:
-    #                         root.createClientID(client_id.text)
-                        
-    #                 MDRaisedButton:
-    #                     id: client_id_delete
-    #                     text: "Delete"
-    #                     on_release:
-    #                         root.deleteClientID(client_id.text)
-
-    #                 MDRaisedButton:
-    #                     id: home
-    #                     text: "Home"
-    #                     on_release:
-    #                         root.manager.current = "home"
-
-    #         MDCard:
-
-    #     MDBoxLayout:
-    #         orientation: "horizontal"
-    #         MDBoxLayout: 
-    #             orientation: "vertical"
-    #             spacing: dp(20)
-    #             MDCard:
-    #                 orientation: "vertical"
-    #                 padding: dp(30)
-    #                 spacing: dp(20)
-    #                 size_hint: 1, 0.65
-    #                 background: "Images/Card_Background.png"
-    #                 MDBoxLayout:
-    #                     MDRaisedButton:
-    #                         id: submit
-    #                         text: "Submit"
-    #                         font_size: dp(20)
-    #                         pos_hint: {"center_y": 0.5}
-    #                         on_release:
-    #                             if app.validateData(host.text, database_username.text, database_password.text, database.text) == True: \
-    #                             root.saveDatabase(host.text, database_username.text, database_password.text, database.text)
-                                
-    #                     AnchorLayout:
-    #                         anchor_x: "right"
-
-    #                         MDRaisedButton:
-    #                             text: "Home"
-    #                             font_size: dp(20)
-    #                             color: "red"
-    #                             on_release: 
-    #                                 root.manager.current = "home"
-    #             MDCard:
-    #                 orientation: "vertical"
-    #                 padding: dp(20)
-    #                 spacing: dp(20)
-    #                 size_hint: 1, 0.35
-    #                 background: "Images/Card_Background.png"
-    #                 MDBoxLayout:
-    #                     MDRaisedButton:
-    #                         id: account_submit
-    #                         text: "Save"
-    #                         font_size: dp(20)
-    #                         pos_hint: {"center_y": 0.5}
-    #                         on_release:
-    #                             if app.validateData(root_username.text, root_password.text) == True: \
-    #                             root.saveSettings(root_username.text, root_password.text)
-                                
-    #                     AnchorLayout:
-    #                         anchor_x: "right"
-
-    #                         MDRaisedButton:
-    #                             text: "Home"
-    #                             font_size: dp(20)
-    #                             color: "red"
-    #                             on_release: root.manager.current = "home"
