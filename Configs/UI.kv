@@ -4,9 +4,10 @@
 WindowManager:
     #LoginWindow:
     HomeWindow: 
-    CreateWindow:
     SettingsWindow:
     EventWindow:
+    AttendanceWindow:
+    ImportWindow:
 
 <EventMDButton@MDRaisedButton>:
     font_size: dp(24)
@@ -48,11 +49,15 @@ WindowManager:
         anchor_y: "center"
 
         MDCard:
-            size_hint: 0.3, 0.3
+            size_hint: 0.3, 0.4
             orientation: 'vertical'
-            padding: dp(10)
-            spacing: dp(25)
+            padding: dp(20)
+            spacing: dp(20)
             background: "Images/Card_Background.png"
+
+            MDLabel:
+                text: "Login . . ."
+                font_size: dp(35)
 
             CustomTextField:
                 id: root_username
@@ -107,21 +112,19 @@ WindowManager:
             
                 CustomMDCard:
                     id: create
-                    orientation: "vertical"
-                    spacing: dp(20)
-                    valign: "center"
-                    on_release: root.manager.current = "create"
+                    on_release: root.manager.current = "event"
+                    padding: dp(15)
 
-                    AnchorLayout:
-                        anchor_x: "left"
-                        anchor_y: "top"
-                        size_hint: 0.1, 0.1
+                    # AnchorLayout:
+                    #     anchor_x: "left"
+                    #     anchor_y: "top"
+                    #     size_hint: 0.1, 0.1
 
-                        MDIconButton:
-                            icon: "cog"
-                            on_release: 
-                                root.manager.current = "settings"
-                                app.loadSettings()
+                    #     MDIconButton:
+                    #         icon: "cog"
+                    #         on_release: 
+                    #             root.manager.current = "settings"
+                    #             app.loadSettings()
 
                     MDBoxLayout:
                         orientation: "vertical"
@@ -130,30 +133,30 @@ WindowManager:
                         valign: "center"
 
                         MDIcon:
-                            icon: "account-arrow-up"
+                            icon: "seat"
                             font_size: dp(65)
                             pos_hint: {"center_x": 0.5}
-                            halign: "center"
 
                         MDLabel:
-                            text: "Create"
+                            text: "Events"
                             font_size: dp(30)
                             bold: True
                             halign: "center"
 
                 CustomMDCard:
-                    id: account_search
+                    id: attendance
                     padding: dp(100)
                     background: "Images/Card_Background.png"
-                    on_release: print("Search")
+                    on_release: 
+                        root.manager.current = "attendance"
                     MDIcon:
-                        icon: "magnify"
+                        icon: "chart-bar"
                         font_size: dp(65)
                         pos_hint: {"center_x": 0.5}
                         halign: "center"
 
                     MDLabel:
-                        text: "Search"
+                        text: "Attendance"
                         font_size: dp(30)
                         bold: True
                         halign: "center"
@@ -164,77 +167,33 @@ WindowManager:
                 spacing: dp(20)
 
                 CustomMDCard:
-                    on_release: root.manager.current = "event"
+                    on_release: root.manager.current = "import"
                     padding: dp(100)
                     MDIcon:
-                        icon: "seat"
+                        icon: "file-import"
                         font_size: dp(65)
                         pos_hint: {"center_x": 0.5}
 
                     MDLabel:
-                        text: "Events"
+                        text: "Import"
                         font_size: dp(30)
                         bold: True
                         halign: "center"
 
                 CustomMDCard:
+                    on_release: root.manager.current = "settings"
+                    padding: dp(100)
+                    MDIcon:
+                        icon: "cog"
+                        font_size: dp(65)
+                        pos_hint: {"center_x": 0.5}
 
-<CreateWindow>:
-    name: "create"
+                    MDLabel:
+                        text: "Settings"
+                        font_size: dp(30)
+                        bold: True
+                        halign: "center"
 
-    BackgroundImage:
-
-    MDAnchorLayout:
-        anchor_x: "center"
-        anchor_y: "center"
-
-        CustomMDCard:
-            id: create_event
-            padding: dp(30), dp(30)
-            spacing: dp(30)
-            size_hint: 0.5, 0.7
-
-            CustomTextField:
-                id: client_id
-                hint_text: "Select Client ID"
-                size_hint: 1, 1
-                readonly: True
-                on_focus: 
-                    if self.focus: \
-                    root.openClientMenu()
-                    
-            CustomTextField:
-                id: event_name
-                hint_text: "Event Name"
-                size_hint: 1, 1,
-
-            CustomTextField:
-                id: event_location
-                hint_text: "Event Location"
-
-            CustomTextField:
-                id: event_date
-                hint_text: "Event Date"
-
-            MDBoxLayout:
-                MDRaisedButton:
-                    id: event_create
-                    text: "Submit"
-                    font_size: dp(20)
-                    pos_hint: {"center_y": 0.5}
-                    on_release:
-                        if app.validateData(client_id.text, event_name.text, event_location.text, event_date.text) == True: \
-                        root.createAccount(client_id.text, event_name.text, event_location.text, event_date.text)
-                        
-                AnchorLayout:
-                    anchor_x: "right"
-
-                    MDRaisedButton:
-                        text: "Home"
-                        font_size: dp(20)
-                        color: "red"
-                        on_release: 
-                            root.manager.current = "home"
 
 <SettingsWindow>:
     name: "settings"
@@ -355,14 +314,18 @@ WindowManager:
             icon: "home"
             font_size: dp(32)
             on_release:
+                root.clear()
                 root.manager.current = "home"
 
     CustomMDCard:
         pos_hint: {"center_x": 0.5, "center_y": 0.5}
-        size_hint: 0.60, 0.5
+        size_hint: 0.60, 0.55
         padding: dp(20)
         spacing: dp(20)
-
+        MDLabel:
+            text: "Events"
+            bold: True
+            font_size: dp(32)
         MDBoxLayout:
             orientation: "horizontal"
             spacing: dp(20)
@@ -395,8 +358,7 @@ WindowManager:
             hint_text: "Event Date"
 
         MDBoxLayout:
-            halign: "center"
-            padding: dp(100), dp(10)
+            spacing: dp(23.5)
 
             EventMDButton:
                 id: create
@@ -431,4 +393,45 @@ WindowManager:
                 id: delete
                 text: "DELETE"
                 disabled: True
+                on_release:
+                    root.delete()
+            
+            EventMDButton:
+                id: exit
+                text: "EXIT"
+                disabled: True
+                on_release: 
+                    root.exit()
 
+<AttendanceWindow>:
+    name: "attendance"
+
+    BackgroundImage:
+
+    AnchorLayout:
+        anchor_x: "left"
+        anchor_y: "top"
+        padding: dp(20)
+
+        MDIconButton:
+            icon: "home"
+            font_size: dp(32)
+            on_release:
+                root.clear()
+                root.manager.current = "home"
+            
+<ImportWindow>:
+    name: "import"
+
+    BackgroundImage:
+
+    AnchorLayout:
+        anchor_x: "left"
+        anchor_y: "top"
+        padding: dp(20)
+
+        MDIconButton:
+            icon: "home"
+            font_size: dp(32)
+            on_release:
+                root.manager.current = "home"

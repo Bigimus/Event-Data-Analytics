@@ -73,47 +73,6 @@ class SettingsWindow(MDScreen):
         data["client_ids"].append(client_id)
         SH.writeJson(SETTINGS, data)
         self.ids.client_id.text = ""
-    
-class CreateWindow(MDScreen):
-    def openClientMenu(self):
-        data = SH.readJson(SETTINGS)
-        clients = [
-            {
-            "text": f"{client}",
-            "viewclass": "OneLineListItem",
-            "on_release": lambda x = f"{client}": self.setClient(x)
-            } for client in data["client_ids"]
-        ]
-        self.client_menu = MDDropdownMenu(
-            caller = self.ids.client_id,
-            items = clients,
-            width_mult = 4,
-            position = "bottom",
-            max_height = dp(224)
-        )
-        self.client_menu.open()
-    
-    def setClient(self, client):
-        self.ids.client_id.text = f"{client}_1"
-        self.client_menu.dismiss()
-    
-    def createAccount(self, client_id:str, event_name, event_location, event_date):
-        client_id = client_id.split("_")
-        event_id = client_id[1]
-        client_id = client_id[0]
-
-        Event(
-            client_id,
-            event_id,
-            event_name,
-            event_location,
-            event_date
-        ).create()
-
-        self.ids.client_id.text = ""
-        self.ids.event_name.text = ""
-        self.ids.event_location.text = ""
-        self.ids.event_date.text = ""
 
 class EventWindow(MDScreen):
     def validateEventNum(self, event_num):
@@ -124,10 +83,18 @@ class EventWindow(MDScreen):
             return False
     
     def clear(self):
+        self.ids.save.disabled = True
+        self.ids.delete.disabled = True
+        self.ids.edit.disabled = True
+        self.ids.exit.disabled = True
+        self.ids.create.disabled = False
+        self.ids.search.disabled = False
+
         self.ids.event_num.text = ""
         self.ids.name.text = ""
         self.ids.location.text = ""
         self.ids.date.text = ""
+
 
     def openClientMenu(self):
         data = SH.readJson(SETTINGS)
@@ -158,10 +125,13 @@ class EventWindow(MDScreen):
         event_id = client_id + "_" + event_num
         self.event = Event(event_id)
         self.event.search()
+
         self.ids.name.text = self.event.name
         self.ids.location.text = self.event.location
         self.ids.date.text = self.event.date
+
         self.ids.edit.disabled = False
+        self.ids.create.disabled = True
     
     # 1b
     def create(self):
@@ -178,6 +148,9 @@ class EventWindow(MDScreen):
     def edit(self):
         self.ids.save.disabled = False
         self.ids.delete.disabled = False
+        self.ids.exit.disabled = False
+        self.ids.create.disabled = True
+        self.ids.search.disabled = True
 
     # 3
     def save(self):
@@ -185,7 +158,29 @@ class EventWindow(MDScreen):
         self.event.location = self.ids.location.text
         self.event.date = self.ids.date.text
         self.event.save()
-        
+        self.clear()
+    
+    # 3
+    def delete(self):
+        self.event.delete()
+        self.clear()
+    # 3
+    def exit(self):
+        self.ids.save.disabled = True
+        self.ids.delete.disabled = True
+        self.ids.edit.disabled = True
+        self.ids.exit.disabled = True
+        self.ids.create.disabled = False
+        self.ids.search.disabled = False
+        self.clear()
+
+class AttendanceWindow(MDScreen):
+    def clear(self):
+        pass
+
+class ImportWindow(MDScreen):
+    pass   
+
 class WindowManager(MDScreenManager):
     pass
 
